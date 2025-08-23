@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alerts Timeline — GitHub Pages</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #121a2b;
+      --muted: #7f8ca8;
+      --text: #e7ecf7;
+      --accent: #7aa2ff;
+      --accent-2: #8be9a7;
+      --danger: #ff6b81;
+      --border: #22304a;
+      --card: #0e1728;
+      --chip: #1a2440;
+      --chip-border: #2a3a5e;
+      --shadow: 0 10px 24px rgba(0,0,0,0.35);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: linear-gradient(180deg, #0b1220 0%, #0d1526 100%);
+      color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      letter-spacing: 0.1px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      position: sticky; top: 0; z-index: 5;
+      background: rgba(14,23,40,0.85); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .container { max-width: 1120px; margin: 0 auto; padding: 18px; }
+    .title { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: radial-gradient(circle at 30% 30%, var(--accent) 0%, #5b80ff 35%, #2f4070 70%);
+      box-shadow: var(--shadow);
+    }
+    h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
+    .sub { margin-top: 4px; font-size: 0.9rem; color: var(--muted); }
+    .panel {
+      background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    @media (min-width: 1000px) { .grid { grid-template-columns: 420px 1fr; } }
+    label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+    input[type="text"], input[type="url"], input[type="date"], input[type="time"], select, textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); outline: none; resize: vertical;
+    }
+    textarea { min-height: 70px; }
+    .row { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--chip-border);
+      background: linear-gradient(180deg, #1b2745, #111a31); color: var(--text);
+      cursor: pointer; transition: transform .08s ease, filter .2s ease; }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { border-color: #5a78ff; background: linear-gradient(180deg, #6f8bff, #3d5bff); color: white; }
+    .btn-danger { border-color: #ff7b8e; background: linear-gradient(180deg, #ff8ea0, #ff6b81); color: white; }
+    .btn-ghost { background: #0f1a32; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { border: 1px solid var(--chip-border); background: var(--chip); padding: 6px 10px; border-radius: 999px; font-size: 0.8rem; color: #cdd6ea; cursor: pointer; }
+    .chip.active { background: #23335b; border-color: #4463a8; color: #e7efff; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .toolbar .left, .toolbar .right { display: flex; align-items: center; gap: 8px; }
+    .count { font-size: 0.9rem; color: var(--muted); }
+    .tiny { font-size: 0.82rem; color: var(--muted); }
+    .status { font-size: 0.85rem; color: #cfe0ff; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px dashed var(--border); vertical-align: top; }
+    th { font-size: 0.8rem; color: #b8c3de; letter-spacing: .04em; text-transform: uppercase; }
+    tr:hover td { background: rgba(122,162,255,.06); }
+    .link-wrap { max-width: 420px; word-wrap: break-word; }
+    .muted { color: var(--muted); font-size: 0.88rem; }
+    .kbd { border: 1px solid var(--chip-border); background: #0f1a32; border-radius: 6px; padding: 2px 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.8rem; color: #96a2c5; }
+    footer { color: var(--muted); font-size: 0.9rem; padding: 24px 18px 36px; }
+    .help { font-size: .92rem; color: #bac6e3; }
+    .pill { display: inline-block; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--chip-border);
+      background: #0f1a32; font-size: 0.75rem; color: #cfe0ff; }
+    .nowrap { white-space: nowrap; }
+    .hidden { display: none !important; }
+    .danger-text { color: var(--danger); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="title">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Alerts Timeline (IST) — GitHub Pages</h1>
+          <div class="sub">Auto‑populate from <code>alerts.json</code> in this repo by default. You can also set a custom feed URL.</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="margin-top:16px;">
+    <div class="grid">
+      <section class="panel" aria-labelledby="form-title">
+        <h2 id="form-title" style="margin:0 0 10px 0;">Settings & Add alert</h2>
+
+        <div class="panel" style="background:#0f1629; border-color:#1b2a48; margin-bottom:14px;">
+          <h3 style="margin:0 0 10px 0; font-size:1rem;">JSON Feed</h3>
+          <label for="feedUrl">Feed URL (defaults to <strong>alerts.json</strong> in this repo)</label>
+          <input id="feedUrl" type="url" placeholder="https://your-domain.com/alerts.json" />
+          <div class="row" style="margin-top:10px;">
+            <div>
+              <label for="refreshMins">Auto‑refresh (minutes)</label>
+              <input id="refreshMins" type="number" min="1" step="1" value="10" />
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="btn btn-primary" id="saveFeedBtn">Save & Test</button>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+            <button class="btn" id="syncNowBtn">Sync now</button>
+            <span class="status" id="feedStatus">Feed not set.</span>
+          </div>
+          <div class="tiny" style="margin-top:8px;">
+            Tip: Append <span class="kbd">?feed=&lt;URL&gt;</span> to override once. If empty, we use <span class="kbd">alerts.json</span> next to this page.
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="category">Category</label>
+            <select id="category">
+              <option>Company News (8 AM)</option>
+              <option>AI/SAP (12 PM)</option>
+              <option>Balance Sheet (3 PM)</option>
+            </select>
+          </div>
+          <div>
+            <label for="companyTopic">Company / Topic (optional)</label>
+            <input id="companyTopic" type="text" placeholder="e.g., PI Industries / RAG / Current Ratio" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="date">Date (IST)</label>
+            <input id="date" type="date" />
+          </div>
+          <div>
+            <label for="time">Time (IST)</label>
+            <input id="time" type="time" />
+          </div>
+        </div>
+        <label for="title">Title / Headline</label>
+        <input id="title" type="text" placeholder="Short headline" />
+        <label for="summary">Summary</label>
+        <textarea id="summary" placeholder="1–3 lines"></textarea>
+        <label for="link">Source Link (optional)</label>
+        <input id="link" type="url" placeholder="https://example.com/article" />
+        <div style="display:flex; gap:10px; margin-top:12px;">
+          <button class="btn btn-primary" id="addBtn">Add alert</button>
+          <button class="btn btn-ghost" id="clearFormBtn">Clear</button>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--border); margin:16px 0;" />
+
+        <div class="help">
+          <strong>Feed schema (v1):</strong>
+<pre class="tiny" style="white-space: pre-wrap; line-height:1.35; background:#0f1a32; border:1px solid var(--chip-border); padding:10px; border-radius:10px;">
+[
+  {
+    "id": "unique-id-123",
+    "category": "Company News (8 AM)",
+    "companyTopic": "PI Industries",
+    "title": "Headline here",
+    "summary": "1–3 lines",
+    "link": "https://example.com",
+    "sentAt": "2025-08-24T12:00:00+05:30"
+  }
+]
+</pre>
+        </div>
+
+        <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn" id="exportBtn" title="Download a JSON backup">Export JSON</button>
+          <label class="btn" for="importInput" title="Import a JSON backup"><span>Import JSON</span></label>
+          <input id="importInput" type="file" accept="application/json" class="hidden" />
+          <button class="btn btn-danger" id="clearAllBtn" title="Delete all alerts">Clear All</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="list-title">
+        <div class="toolbar">
+          <div class="left">
+            <h2 id="list-title" style="margin:0;">Your alerts</h2>
+            <span class="count" id="countLabel">0 items</span>
+          </div>
+          <div class="right">
+            <input id="search" type="text" placeholder="Search title, summary, company/topic…" style="min-width:280px;" />
+          </div>
+        </div>
+
+        <div class="chips" id="chipBar" role="tablist" aria-label="Filter alerts">
+          <span class="chip active" data-filter="all" role="tab" aria-selected="true">All</span>
+          <span class="chip" data-filter="Company News (8 AM)" role="tab" aria-selected="false">Company News</span>
+          <span class="chip" data-filter="AI/SAP (12 PM)" role="tab" aria-selected="false">AI/SAP</span>
+          <span class="chip" data-filter="Balance Sheet (3 PM)" role="tab" aria-selected="false">Balance Sheet</span>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:10px;">
+          <div class="tiny">Last sync: <span id="lastSync">never</span></div>
+          <div class="tiny">Items from feed are blended with local items (newest first).</div>
+        </div>
+
+        <div style="overflow:auto; margin-top:12px;">
+          <table aria-describedby="list-title">
+            <thead>
+              <tr>
+                <th class="nowrap">Date</th>
+                <th class="nowrap">Time</th>
+                <th>Category</th>
+                <th>Title & Summary</th>
+                <th>Company/Topic</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div>Times are displayed in <strong>IST (Asia/Kolkata)</strong>. Sorting is newest first.</div>
+    </footer>
+  </main>
+
+  <script>
+    // --- Utilities ---
+    const TZ = "Asia/Kolkata";
+    const STORAGE_KEY = "alertsDataV1";
+    const FEED_URL_KEY = "alertsFeedURL";
+    const REFRESH_MINS_KEY = "alertsFeedRefreshMins";
+
+    function uid() { return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8); }
+    function loadData() {
+      try { const raw = localStorage.getItem(STORAGE_KEY); if (!raw) return []; const arr = JSON.parse(raw); return Array.isArray(arr) ? arr : []; }
+      catch { return []; }
+    }
+    function saveData(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+    function getFeedUrl() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("feed")) return params.get("feed");
+      const saved = localStorage.getItem(FEED_URL_KEY);
+      if (saved) return saved;
+      // Default to alerts.json in the same repo
+      return "alerts.json";
+    }
+    function setFeedUrl(url) { localStorage.setItem(FEED_URL_KEY, url); }
+    function getRefreshMins() { const v = parseInt(localStorage.getItem(REFRESH_MINS_KEY) || "10", 10); return (isNaN(v) || v < 1) ? 10 : v; }
+    function setRefreshMins(v) { localStorage.setItem(REFRESH_MINS_KEY, String(v)); }
+    function toISTString(date) {
+      return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: TZ }).format(date);
+    }
+    function formatISTParts(date) {
+      const d = new Intl.DateTimeFormat("en-GB", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: TZ })
+        .formatToParts(date).reduce((acc, p) => (acc[p.type] = p.value, acc), {});
+      return { y: d.year, m: d.month, d: d.day, hh: d.hour, mm: d.minute };
+    }
+    function parseISTDateTime(dateStr, timeStr) { return new Date(`${dateStr}T${timeStr || "12:00"}:00+05:30`); }
+    function escapeHtml(str) { return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
+    // --- State ---
+    let data = loadData();
+    let currentFilter = "all";
+    let searchTerm = "";
+    let feedUrl = getFeedUrl();
+    let refreshTimer = null;
+
+    // Prefill date/time & feed settings
+    (function prefill() {
+      const now = new Date();
+      const parts = formatISTParts(now);
+      document.getElementById("date").value = `${parts.y}-${parts.m}-${parts.d}`;
+      document.getElementById("time").value = `${parts.hh}:${parts.mm}`;
+
+      const feedInput = document.getElementById("feedUrl");
+      feedInput.value = (localStorage.getItem(FEED_URL_KEY) || "");
+      const refreshMins = getRefreshMins();
+      document.getElementById("refreshMins").value = String(refreshMins);
+
+      document.getElementById("feedStatus").textContent = "Using feed: " + feedUrl;
+      // Auto-sync once on load and start interval
+      syncFromFeed();
+      startAutoRefresh(refreshMins);
+    })();
+
+    function setStatus(msg, ok=true) {
+      const el = document.getElementById("feedStatus");
+      el.textContent = msg;
+      el.classList.toggle("danger-text", !ok);
+    }
+    function setLastSync(date) { document.getElementById("lastSync").textContent = toISTString(date); }
+
+    async function syncFromFeed() {
+      setStatus("Syncing…");
+      try {
+        const res = await fetch(feedUrl, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        const items = Array.isArray(json) ? json : (Array.isArray(json.items) ? json.items : []);
+        if (!Array.isArray(items)) throw new Error("Invalid feed structure");
+
+        const byId = new Map(data.map(x => [x.id || (x.title+"|"+x.sentAt), x]));
+        for (const it of items) {
+          if (!it || !it.title || !it.sentAt) continue;
+          const key = it.id || (it.title + "|" + it.sentAt);
+          const normalized = {
+            id: it.id || key,
+            category: it.category || "Company News (8 AM)",
+            companyTopic: it.companyTopic || "",
+            title: String(it.title),
+            summary: it.summary ? String(it.summary) : "",
+            link: it.link || "",
+            sentAt: new Date(it.sentAt).toISOString()
+          };
+          byId.set(key, normalized);
+        }
+        data = Array.from(byId.values());
+        saveData(data);
+        render();
+        setLastSync(new Date());
+        setStatus("Sync complete.");
+      } catch (err) {
+        console.error(err);
+        setStatus("Sync failed: " + err.message, false);
+      }
+    }
+    function startAutoRefresh(mins) { if (refreshTimer) clearInterval(refreshTimer); refreshTimer = setInterval(syncFromFeed, Math.max(1, mins) * 60 * 1000); }
+
+    // --- Render ---
+    function render() {
+      const items = [...data].sort((a,b)=> new Date(b.sentAt) - new Date(a.sentAt));
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+      let shown = 0;
+      for (const it of items) {
+        if (currentFilter !== "all" && it.category !== currentFilter) continue;
+        if (searchTerm) {
+          const hay = (it.title + " " + (it.summary||"") + " " + (it.companyTopic||"")).toLowerCase();
+          if (!hay.includes(searchTerm.toLowerCase())) continue;
+        }
+        const tr = document.createElement("tr");
+        const dt = new Date(it.sentAt);
+        const parts = formatISTParts(dt);
+
+        const tdDate = document.createElement("td"); tdDate.textContent = `${parts.d}-${parts.m}-${parts.y}`; tr.appendChild(tdDate);
+        const tdTime = document.createElement("td"); tdTime.textContent = `${parts.hh}:${parts.mm}`; tr.appendChild(tdTime);
+        const tdCat = document.createElement("td"); tdCat.innerHTML = `<span class="pill">${escapeHtml(it.category || "")}</span>`; tr.appendChild(tdCat);
+        const tdTitle = document.createElement("td"); tdTitle.innerHTML = `<div><strong>${escapeHtml(it.title)}</strong></div>${it.summary ? `<div class="muted link-wrap">${escapeHtml(it.summary)}</div>` : ""}`; tr.appendChild(tdTitle);
+        const tdCT = document.createElement("td"); tdCT.textContent = it.companyTopic || "—"; tr.appendChild(tdCT);
+        const tdLink = document.createElement("td");
+        if (it.link) { const a = document.createElement("a"); a.href = it.link; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = "Open source"; tdLink.appendChild(a); }
+        else { tdLink.textContent = "—"; }
+        tr.appendChild(tdLink);
+
+        tbody.appendChild(tr);
+        shown++;
+      }
+      document.getElementById("countLabel").textContent = `${shown} item${shown===1?"":"s"}`;
+    }
+
+    // --- Events ---
+    document.getElementById("saveFeedBtn").addEventListener("click", () => {
+      const url = document.getElementById("feedUrl").value.trim();
+      const mins = parseInt(document.getElementById("refreshMins").value || "10", 10);
+      if (!url) { setStatus("Reset to default (alerts.json). Saved.", true); localStorage.removeItem(FEED_URL_KEY); feedUrl = getFeedUrl(); }
+      else { setFeedUrl(url); feedUrl = url; setStatus("Saved feed: " + url); }
+      setLastSync(new Date(0));
+      startAutoRefresh(mins);
+      syncFromFeed();
+    });
+    document.getElementById("syncNowBtn").addEventListener("click", () => syncFromFeed());
+    document.getElementById("addBtn").addEventListener("click", () => {
+      const category = document.getElementById("category").value;
+      const companyTopic = document.getElementById("companyTopic").value.trim();
+      const dateStr = document.getElementById("date").value;
+      const timeStr = document.getElementById("time").value;
+      const title = document.getElementById("title").value.trim();
+      const summary = document.getElementById("summary").value.trim();
+      const link = document.getElementById("link").value.trim();
+      if (!title) { alert("Please enter a Title / Headline."); return; }
+      if (!dateStr) { alert("Please choose a Date (IST)."); return; }
+      const dt = parseISTDateTime(dateStr, timeStr || "12:00");
+      const item = { id: uid(), category, companyTopic, title, summary, link, sentAt: dt.toISOString() };
+      data.push(item); saveData(data); render();
+      document.getElementById("title").value = ""; document.getElementById("summary").value = ""; document.getElementById("link").value = ""; document.getElementById("title").focus();
+    });
+    document.getElementById("clearFormBtn").addEventListener("click", () => { ["companyTopic","title","summary","link"].forEach(id => document.getElementById(id).value = ""); });
+    document.getElementById("search").addEventListener("input", (e) => { searchTerm = e.target.value.trim(); render(); });
+    document.getElementById("chipBar").addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip"); if (!chip) return;
+      currentFilter = chip.dataset.filter; document.querySelectorAll(".chip").forEach(c => c.classList.remove("active")); chip.classList.add("active"); render();
+    });
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url;
+      const ts = new Date(); const p = formatISTParts(ts);
+      a.download = `alerts-backup_${p.y}${p.m}${p.d}_${p.hh}${p.mm}.json`;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+    });
+    document.getElementById("importInput").addEventListener("change", (e) => {
+      const file = e.target.files?.[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const arr = JSON.parse(reader.result);
+          if (!Array.isArray(arr)) throw new Error("Invalid JSON structure");
+          const byId = new Map(data.map(x => [x.id || (x.title+'|'+x.sentAt), x]));
+          for (const it of arr) { if (it && (it.id || (it.title && it.sentAt))) { const key = it.id || (it.title + "|" + it.sentAt); byId.set(key, it); } }
+          data = Array.from(byId.values()); saveData(data); render(); alert("Import complete.");
+        } catch(err) { alert("Failed to import JSON: " + err.message); } finally { e.target.value = ""; }
+      };
+      reader.readAsText(file);
+    });
+    document.getElementById("clearAllBtn").addEventListener("click", () => { if (!confirm("Delete ALL alerts? This cannot be undone.")) return; data = []; saveData(data); render(); });
+    render();
+  </script>
+</body>
+</html>
