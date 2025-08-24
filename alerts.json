@@ -1,0 +1,29 @@
+[
+  {
+    "id": "sample-1",
+    "category": "Company News (8 AM)",
+    "companyTopic": "PI Industries",
+    "title": "PI Industries announces capacity expansion",
+    "summary": "Board approves capex for new chemistries; commissioning in FY26.",
+    "link": "https://example.com/pi-industries-expansion",
+    "sentAt": "2025-08-24T08:00:00+05:30"
+  },
+  {
+    "id": "sample-2",
+    "category": "AI/SAP (12 PM)",
+    "companyTopic": "RAG",
+    "title": "Concept: Retrieval‑Augmented Generation (RAG)",
+    "summary": "RAG mixes retrieval with generation to cut hallucination; includes tutorial video.",
+    "link": "https://example.com/rag-tutorial",
+    "sentAt": "2025-08-24T12:00:00+05:30"
+  },
+  {
+    "id": "sample-3",
+    "category": "Balance Sheet (3 PM)",
+    "companyTopic": "Neogen Chemicals",
+    "title": "Concept: Current ratio & working capital",
+    "summary": "Compute liquidity buffers; beware inventory and advances in CA/CL.",
+    "link": "https://example.com/current-ratio-explainer",
+    "sentAt": "2025-08-24T15:00:00+05:30"
+  }
+]
